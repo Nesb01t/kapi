@@ -40,7 +40,7 @@ class UserDAOImpl : UserDAO {
 val dao: UserDAO = UserDAOImpl().apply {
     runBlocking {
         if (getAllUsers().isEmpty()) {
-            addNewUser(User(0, "admin", "admin@163.com"))
+            addNewUser(User(0, "defaultUser", "admin@163.com"))
         }
     }
 }
