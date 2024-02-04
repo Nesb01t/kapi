@@ -1,6 +1,6 @@
 package cafe.nes.routes
 
-import cafe.nes.dao.dao
+import cafe.nes.dao.userSvc
 import cafe.nes.models.User
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -12,7 +12,7 @@ fun Route.userRouting() {
     route("/user") {
 
         get("/") {
-            call.respondText(dao.getAllUsers().toString())
+            call.respondText(userSvc.getAllUsers().toString())
         }
 
         get("/{id}") {
@@ -22,19 +22,19 @@ fun Route.userRouting() {
                 return@get
             }
 
-            val user = dao.getUser(id)
+            val user = userSvc.getUser(id)
             call.respond(user.toString())
         }
 
         post("/") {
             val received = call.receive<User>()
-            val user = dao.addNewUser(user = received)
+            val user = userSvc.addNewUser(user = received)
             call.respondText(user.toString())
         }
 
         patch("/") {
             val received = call.receive<User>()
-            val user = dao.editUser(user = received)
+            val user = userSvc.editUser(user = received)
             call.respondText(user.toString())
         }
 
@@ -44,7 +44,7 @@ fun Route.userRouting() {
                 call.respond(HttpStatusCode.BadRequest, "id is required")
                 return@delete
             }
-            val user = dao.deleteUser(id)
+            val user = userSvc.deleteUser(id)
             call.respondText(user.toString())
         }
     }

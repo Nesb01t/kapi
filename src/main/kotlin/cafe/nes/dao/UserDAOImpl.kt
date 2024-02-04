@@ -3,7 +3,6 @@ package cafe.nes.dao
 import cafe.nes.dao.DatabaseSingleton.dbQuery
 import cafe.nes.models.User
 import cafe.nes.models.Users
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
@@ -77,4 +76,4 @@ class UserDAOImpl : UserDAO {
     }
 }
 
-val dao: UserDAO = UserDAOImpl()
+val userSvc: UserDAO = UserDAOImpl()
