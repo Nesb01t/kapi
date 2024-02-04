@@ -7,4 +7,5 @@ interface UserDAO {
     suspend fun getUser(id: Int): User?
     suspend fun addNewUser(user: User): User?
     suspend fun deleteUser(id: Int): Boolean
+    suspend fun editUser(user: User): Boolean
 }

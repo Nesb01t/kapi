@@ -35,6 +35,16 @@ class UserDAOImpl : UserDAO {
     override suspend fun deleteUser(id: Int): Boolean = dbQuery {
         Users.deleteWhere { Users.id eq id } > 0
     }
+
+    override suspend fun editUser(user: User): Boolean = dbQuery {
+        if (user.id != null) {
+            val updatedRowCount = Users.update({ Users.id eq user.id }) {
+                it[name] = user.name
+                it[email] = user.email
+            }
+            updatedRowCount > 0
+        } else false
+    }
 }
 
 val dao: UserDAO = UserDAOImpl().apply {

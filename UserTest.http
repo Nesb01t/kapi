@@ -1,5 +1,5 @@
 ###
-POST http://127.0.0.1:8080/
+POST http://127.0.0.1:8080/user/
 Content-Type: application/json
 
 {
@@ -8,12 +8,22 @@ Content-Type: application/json
 }
 
 ###
-GET http://127.0.0.1:8080/
+GET http://127.0.0.1:8080/user/
 Content-Type: application/json
 
 ###
-GET http://127.0.0.1:8080/user/120
+GET http://127.0.0.1:8080/user/1
 Content-Type: application/json
+
+###
+PATCH http://127.0.0.1:8080
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "nesb01t",
+  "email": "patched@163.com"
+}
 
 ###
 DELETE http://127.0.0.1:8080/user/120
