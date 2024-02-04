@@ -37,5 +37,15 @@ fun Route.userRouting() {
             val user = dao.editUser(user = received)
             call.respondText(user.toString())
         }
+
+        delete("/{id}") {
+            val id = call.parameters["id"]?.toInt()
+            if (id == null) {
+                call.respond(HttpStatusCode.BadRequest, "id is required")
+                return@delete
+            }
+            val user = dao.deleteUser(id)
+            call.respondText(user.toString())
+        }
     }
 }

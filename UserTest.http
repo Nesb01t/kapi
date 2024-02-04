@@ -16,7 +16,7 @@ GET http://127.0.0.1:8080/user/1
 Content-Type: application/json
 
 ###
-PATCH http://127.0.0.1:8080
+PATCH http://127.0.0.1:8080/user/
 Content-Type: application/json
 
 {
@@ -26,5 +26,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://127.0.0.1:8080/user/120
+DELETE http://127.0.0.1:8080/user/1
 Content-Type: application/json
