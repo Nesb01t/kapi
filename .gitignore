@@ -6,6 +6,7 @@ build/
 
 ### DB ###
 db.mv.db
+db.trace.db
 
 ### STS ###
 .apt_generated

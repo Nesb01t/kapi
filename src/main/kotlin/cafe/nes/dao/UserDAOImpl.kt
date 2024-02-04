@@ -10,8 +10,18 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 class UserDAOImpl : UserDAO {
     private fun resultRowToUser(row: ResultRow) = User(
         id = row[Users.id],
+        no = row[Users.no],
         name = row[Users.name],
-        email = row[Users.email]
+        email = row[Users.email],
+        phone = row[Users.phone],
+        qq = row[Users.qq],
+        wechat = row[Users.wechat],
+        className = row[Users.className],
+        roomName = row[Users.roomName],
+        address = row[Users.address],
+        birthPlace = row[Users.birthPlace],
+        selfResume = row[Users.selfResume],
+        adminResume = row[Users.adminResume]
     )
 
     override suspend fun getAllUsers(): List<User> = dbQuery {
@@ -26,8 +36,18 @@ class UserDAOImpl : UserDAO {
 
     override suspend fun addNewUser(user: User): User? = dbQuery {
         val insert = Users.insert {
-            it[Users.name] = user.name
-            it[Users.email] = user.email
+            it[no] = user.no
+            it[name] = user.name
+            it[email] = user.email
+            it[phone] = user.phone
+            it[qq] = user.qq
+            it[wechat] = user.wechat
+            it[className] = user.className
+            it[roomName] = user.roomName
+            it[address] = user.address
+            it[birthPlace] = user.birthPlace
+            it[selfResume] = user.selfResume
+            it[adminResume] = user.adminResume
         }
         insert.resultedValues?.singleOrNull()?.let { resultRowToUser(it) }
     }
@@ -39,18 +59,22 @@ class UserDAOImpl : UserDAO {
     override suspend fun editUser(user: User): Boolean = dbQuery {
         if (user.id != null) {
             val updatedRowCount = Users.update({ Users.id eq user.id }) {
+                it[no] = user.no
                 it[name] = user.name
                 it[email] = user.email
+                it[phone] = user.phone
+                it[qq] = user.qq
+                it[wechat] = user.wechat
+                it[className] = user.className
+                it[roomName] = user.roomName
+                it[address] = user.address
+                it[birthPlace] = user.birthPlace
+                it[selfResume] = user.selfResume
+                it[adminResume] = user.adminResume
             }
             updatedRowCount > 0
         } else false
     }
 }
 
-val dao: UserDAO = UserDAOImpl().apply {
-    runBlocking {
-        if (getAllUsers().isEmpty()) {
-            addNewUser(User(0, "defaultUser", "admin@163.com"))
-        }
-    }
-}
+val dao: UserDAO = UserDAOImpl()
