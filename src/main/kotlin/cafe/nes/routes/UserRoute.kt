@@ -12,7 +12,7 @@ fun Route.userRouting() {
     route("/user") {
 
         get("/") {
-            call.respondText(userSvc.getAllUsers().toString())
+            call.respond(userSvc.getAllUsers())
         }
 
         get("/{id}") {
@@ -23,19 +23,32 @@ fun Route.userRouting() {
             }
 
             val user = userSvc.getUser(id)
-            call.respond(user.toString())
+            if (user == null) {
+                call.respond(HttpStatusCode.NotFound, "User not found")
+                return@get
+            }
+
+            call.respond(user)
         }
 
         post("/") {
             val received = call.receive<User>()
+
             val user = userSvc.addNewUser(user = received)
-            call.respondText(user.toString())
+            if (user == null) {
+                call.respond(HttpStatusCode.BadRequest, "User already exists")
+                return@post
+            }
+
+            call.respond(user)
         }
 
         patch("/") {
             val received = call.receive<User>()
+
             val user = userSvc.editUser(user = received)
-            call.respondText(user.toString())
+
+            call.respond(user)
         }
 
         delete("/{id}") {
@@ -44,8 +57,9 @@ fun Route.userRouting() {
                 call.respond(HttpStatusCode.BadRequest, "id is required")
                 return@delete
             }
+
             val user = userSvc.deleteUser(id)
-            call.respondText(user.toString())
+            call.respond(user)
         }
     }
 }

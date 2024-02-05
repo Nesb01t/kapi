@@ -12,13 +12,19 @@ fun Route.messageRouting() {
     route("/message") {
 
         get("/") {
-            call.respondText(messageSvc.getMessages().toString())
+            call.respond(messageSvc.getMessages())
         }
 
         post("/") {
             val received = call.receive<Message>()
+
             val msg = messageSvc.boardMessage(msg = received)
-            call.respondText(msg.toString())
+            if (msg == null) {
+                call.respond(HttpStatusCode.BadRequest, "Message is required")
+                return@post
+            }
+
+            call.respond(msg)
         }
 
         delete("/{id}") {
@@ -27,8 +33,9 @@ fun Route.messageRouting() {
                 call.respond(HttpStatusCode.BadRequest, "id is required")
                 return@delete
             }
+
             val res = messageSvc.deleteMessage(id)
-            call.respondText(res.toString())
+            call.respond(res)
         }
     }
 }
