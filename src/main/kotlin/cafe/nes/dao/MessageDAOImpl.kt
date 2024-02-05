@@ -5,12 +5,14 @@ import cafe.nes.models.Message
 import cafe.nes.models.Messages
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import java.time.LocalDateTime
 
 class MessageDAOImpl : MessageDAO {
     private fun resultRowToMessage(row: ResultRow) = Message(
         id = row[Messages.id],
         content = row[Messages.content],
-        userId = row[Messages.userId]
+        userId = row[Messages.userId],
+        time = row[Messages.time]
     )
 
     override suspend fun getMessages(): List<Message> = dbQuery {
@@ -21,6 +23,7 @@ class MessageDAOImpl : MessageDAO {
         val insert = Messages.insert {
             it[content] = msg.content
             it[userId] = msg.userId
+            it[time] = msg.time ?: LocalDateTime.now().toString()
         }
         insert.resultedValues?.singleOrNull()?.let { resultRowToMessage(it) }
     }

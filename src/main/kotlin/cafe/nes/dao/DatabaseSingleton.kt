@@ -1,5 +1,6 @@
 package cafe.nes.dao
 
+import cafe.nes.models.Messages
 import cafe.nes.models.Users
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
@@ -15,6 +16,7 @@ object DatabaseSingleton {
         DatabaseMigration.migrate()
         transaction(database) {
             SchemaUtils.create(Users)
+            SchemaUtils.create(Messages)
         }
     }
 
