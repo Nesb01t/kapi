@@ -2,6 +2,7 @@ package cafe.nes.routes
 
 import cafe.nes.dao.userSvc
 import cafe.nes.models.User
+import cafe.nes.plugins.JwtConfig
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -15,6 +16,21 @@ fun Route.userRouting() {
             call.respond(userSvc.getAllUsers())
         }
 
+        get("/me") {
+            val header = call.request.headers["Authorization"]
+            if (header != null && header.startsWith("Bearer ")) {
+                val token = header.substringAfter("Bearer ")
+                val id = JwtConfig.getUserIdFromToken(token)
+                val user = userSvc.getUser(id)
+                if (user != null) {
+                    call.respond(user.withoutPassword())
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                }
+            } else {
+                call.respond(HttpStatusCode.Unauthorized, "Invalid token")
+            }
+        }
         get("/{id}") {
             val id = call.parameters["id"]?.toInt()
             if (id == null) {

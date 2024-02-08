@@ -34,6 +34,11 @@ object JwtConfig {
 
     fun makeToken(user: User): String =
         JWT.create().withSubject("Authentication").withIssuer(issuer).withClaim("name", user.name)
-            .withClaim("isAdmin", user.isAdmin).withExpiresAt(Date(System.currentTimeMillis() + validityInMs))
-            .sign(algorithm)
+            .withClaim("id", user.id).withClaim("isAdmin", user.isAdmin)
+            .withExpiresAt(Date(System.currentTimeMillis() + validityInMs)).sign(algorithm)
+
+    fun getUserIdFromToken(token: String): Int {
+        val decodedToken = JWT.decode(token)
+        return decodedToken.getClaim("id").asInt()
+    }
 }
