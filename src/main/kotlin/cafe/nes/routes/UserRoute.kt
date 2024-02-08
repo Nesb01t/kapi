@@ -28,7 +28,7 @@ fun Route.userRouting() {
                 return@get
             }
 
-            call.respond(user)
+            call.respond(user.withoutPassword())
         }
 
         post("/") {
@@ -40,7 +40,7 @@ fun Route.userRouting() {
                 return@post
             }
 
-            call.respond(user)
+            call.respond(user.withoutPassword())
         }
 
         patch("/") {
@@ -58,8 +58,8 @@ fun Route.userRouting() {
                 return@delete
             }
 
-            val user = userSvc.deleteUser(id)
-            call.respond(user)
+            val flag = userSvc.deleteUser(id)
+            call.respond(flag)
         }
     }
 }

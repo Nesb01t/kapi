@@ -1,5 +1,6 @@
 package cafe.nes.models
 
+import io.ktor.server.auth.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
 
@@ -8,6 +9,10 @@ data class User(
     val id: Int? = null,
     val no: Int,
     val name: String,
+
+    // auth
+    val password: String,
+    val isAdmin: Boolean = false,
 
     // 联系方式
     val email: String? = null,
@@ -26,12 +31,20 @@ data class User(
     // 自我和管理员留言
     val selfResume: String? = null,
     val adminResume: String? = null,
-)
+) : Principal {
+    fun withoutPassword(): User {
+        return this.copy(password = "")
+    }
+}
 
 object Users : Table() {
     val id = integer("id").autoIncrement()
     val no = integer("no")
     val name = varchar("name", 50)
+
+    // auth
+    val password = varchar("password", 255)
+    val isAdmin = bool("isAdmin")
 
     // 联系方式
     val email = varchar("email", 50).nullable()

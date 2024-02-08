@@ -11,6 +11,8 @@ class UserDAOImpl : UserDAO {
         id = row[Users.id],
         no = row[Users.no],
         name = row[Users.name],
+        password = row[Users.password],
+        isAdmin = row[Users.isAdmin],
         email = row[Users.email],
         phone = row[Users.phone],
         qq = row[Users.qq],
@@ -24,19 +26,23 @@ class UserDAOImpl : UserDAO {
     )
 
     override suspend fun getAllUsers(): List<User> = dbQuery {
-        Users.selectAll().map { resultRowToUser(it) }
+        Users.selectAll().map { resultRowToUser(it).withoutPassword() }
     }
 
     override suspend fun getUser(id: Int): User? = dbQuery {
-        Users.select { Users.id eq id }
-            .map { resultRowToUser(it) }
-            .singleOrNull()
+        Users.select { Users.id eq id }.map { resultRowToUser(it) }.singleOrNull()
+    }
+
+    override suspend fun getUserByNo(no: Int): User? = dbQuery {
+        Users.select { Users.no eq no }.map { resultRowToUser(it) }.singleOrNull()
     }
 
     override suspend fun addNewUser(user: User): User? = dbQuery {
         val insert = Users.insert {
             it[no] = user.no
             it[name] = user.name
+            it[password] = user.password
+            it[isAdmin] = user.isAdmin
             it[email] = user.email
             it[phone] = user.phone
             it[qq] = user.qq
@@ -61,6 +67,8 @@ class UserDAOImpl : UserDAO {
                 it[no] = user.no
                 it[name] = user.name
                 it[email] = user.email
+                it[password] = user.password
+                it[isAdmin] = user.isAdmin
                 it[phone] = user.phone
                 it[qq] = user.qq
                 it[wechat] = user.wechat
