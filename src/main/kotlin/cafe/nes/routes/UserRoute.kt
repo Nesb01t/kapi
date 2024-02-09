@@ -31,6 +31,7 @@ fun Route.userRouting() {
                 call.respond(HttpStatusCode.Unauthorized, "Invalid token")
             }
         }
+        
         get("/{id}") {
             val id = call.parameters["id"]?.toInt()
             if (id == null) {

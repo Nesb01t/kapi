@@ -64,10 +64,8 @@ class UserDAOImpl : UserDAO {
     override suspend fun editUser(user: User): Boolean = dbQuery {
         if (user.id != null) {
             val updatedRowCount = Users.update({ Users.id eq user.id }) {
-                it[no] = user.no
                 it[name] = user.name
                 it[email] = user.email
-                it[password] = user.password
                 it[isAdmin] = user.isAdmin
                 it[phone] = user.phone
                 it[qq] = user.qq
