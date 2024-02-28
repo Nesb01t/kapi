@@ -22,7 +22,10 @@ class UserDAOImpl : UserDAO {
         address = row[Users.address],
         birthPlace = row[Users.birthPlace],
         selfResume = row[Users.selfResume],
-        adminResume = row[Users.adminResume]
+        adminResume = row[Users.adminResume],
+        birthday = row[Users.birthday],
+        sex = row[Users.sex],
+        avatar = row[Users.avatar]
     )
 
     override suspend fun getAllUsers(): List<User> = dbQuery {
@@ -53,6 +56,7 @@ class UserDAOImpl : UserDAO {
             it[birthPlace] = user.birthPlace
             it[selfResume] = user.selfResume
             it[adminResume] = user.adminResume
+            it[avatar] = user.avatar
         }
         insert.resultedValues?.singleOrNull()?.let { resultRowToUser(it) }
     }
@@ -76,6 +80,7 @@ class UserDAOImpl : UserDAO {
                 it[birthPlace] = user.birthPlace
                 it[selfResume] = user.selfResume
                 it[adminResume] = user.adminResume
+                it[avatar] = user.avatar
             }
             updatedRowCount > 0
         } else false
