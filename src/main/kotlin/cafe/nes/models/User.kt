@@ -3,7 +3,6 @@ package cafe.nes.models
 import io.ktor.server.auth.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
-import java.io.File
 
 @Serializable
 data class User(
@@ -24,7 +23,7 @@ data class User(
     // 个人信息
     val sex: String? = null,
     val birthday: String? = null,
-    val avatar: ByteArray? = null,
+    val avatar: String? = null,
 
     // 寝室班级号
     val className: String? = null,
@@ -55,8 +54,8 @@ object Users : Table() {
     // 个人信息
     val sex = varchar("sex", 10).nullable()
     val birthday = varchar("birthday", 50).nullable()
-    val avatar = binary("avatar").nullable()
-    
+    val avatar = varchar("avatar", 255).nullable()
+
     // 联系方式
     val email = varchar("email", 50).nullable()
     val phone = varchar("phone", 50).nullable()

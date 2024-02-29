@@ -1,10 +1,15 @@
 package cafe.nes.dao
 
 import cafe.nes.dao.DatabaseSingleton.dbQuery
+import cafe.nes.models.Avatars
 import cafe.nes.models.User
 import cafe.nes.models.Users
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.statements.api.ExposedBlob
+import java.io.File
+import java.sql.Blob
+import javax.sql.rowset.serial.SerialBlob
 
 class UserDAOImpl : UserDAO {
     private fun resultRowToUser(row: ResultRow) = User(
@@ -56,7 +61,6 @@ class UserDAOImpl : UserDAO {
             it[birthPlace] = user.birthPlace
             it[selfResume] = user.selfResume
             it[adminResume] = user.adminResume
-            it[avatar] = user.avatar
         }
         insert.resultedValues?.singleOrNull()?.let { resultRowToUser(it) }
     }
@@ -84,6 +88,36 @@ class UserDAOImpl : UserDAO {
             }
             updatedRowCount > 0
         } else false
+    }
+
+    override suspend fun uploadAvatar(id: Int, file: File): String {
+        // check if user exists
+        getUser(id) ?: return "User not found"
+
+        // load file
+        val bytes = file.readBytes()
+        val updated = dbQuery {
+            val avatar = Avatars.insert {
+                it[fileName] = file.name
+                it[bin] = bytes
+            }
+            Users.update({ Users.id eq id }) {
+                it[Users.avatar] = avatar[Avatars.id].toString()
+            }
+        }
+
+        // return
+        if (updated > 0) {
+            return "Avatar uploaded"
+        }
+        return "Avatar not uploaded"
+    }
+
+    override suspend fun getAvatar(id: Int): Blob? = dbQuery {
+        val avatarId = Users.select { Users.id eq id }.singleOrNull()?.get(Users.avatar) ?: return@dbQuery null
+        val blob =
+            Avatars.select { Avatars.id eq avatarId.toInt() }.singleOrNull()?.get(Avatars.bin) ?: return@dbQuery null
+        SerialBlob(blob)
     }
 }
 

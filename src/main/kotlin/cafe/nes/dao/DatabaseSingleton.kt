@@ -1,5 +1,6 @@
 package cafe.nes.dao
 
+import cafe.nes.models.Avatars
 import cafe.nes.models.Messages
 import cafe.nes.models.Users
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ object DatabaseSingleton {
         transaction(database) {
             SchemaUtils.create(Users)
             SchemaUtils.create(Messages)
+            SchemaUtils.create(Avatars)
         }
     }
 
