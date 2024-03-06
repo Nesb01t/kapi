@@ -61,6 +61,8 @@ class UserDAOImpl : UserDAO {
             it[birthPlace] = user.birthPlace
             it[selfResume] = user.selfResume
             it[adminResume] = user.adminResume
+            it[sex] = user.sex
+            it[birthday] = user.birthday
         }
         insert.resultedValues?.singleOrNull()?.let { resultRowToUser(it) }
     }
@@ -84,7 +86,9 @@ class UserDAOImpl : UserDAO {
                 it[birthPlace] = user.birthPlace
                 it[selfResume] = user.selfResume
                 it[adminResume] = user.adminResume
-                it[avatar] = user.avatar
+                it[adminResume] = user.sex
+                it[sex] = user.birthday
+                it[birthday] = user.avatar
             }
             updatedRowCount > 0
         } else false
