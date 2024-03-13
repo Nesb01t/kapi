@@ -86,9 +86,8 @@ class UserDAOImpl : UserDAO {
                 it[birthPlace] = user.birthPlace
                 it[selfResume] = user.selfResume
                 it[adminResume] = user.adminResume
-                it[adminResume] = user.sex
-                it[sex] = user.birthday
-                it[birthday] = user.avatar
+                it[sex] = user.sex
+                it[birthday] = user.birthday
             }
             updatedRowCount > 0
         } else false
